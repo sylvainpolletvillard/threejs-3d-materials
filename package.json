@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "node ./build/deploy.js"
+    "deploy": "node ./build/deploy.cjs"
   },
   "devDependencies": {
     "@types/three": "^0.144.0",
