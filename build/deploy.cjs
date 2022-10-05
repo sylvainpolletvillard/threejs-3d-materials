@@ -15,6 +15,7 @@ cd('dist')
 // echo(""'www.example.com' > CNAME")
 
 exec("git init")
+exec("git checkout -b gh-pages")
 exec("git add -A")
 
 if (exec('git commit -m "deploy"').code !== 0) {
@@ -23,6 +24,6 @@ if (exec('git commit -m "deploy"').code !== 0) {
 }
 
 // if you are deploying to https://<USERNAME>.github.io/<REPO>
-exec('git push -f https://github.com/sylvainpolletvillard/threejs-3d-materials main:gh-pages')
+exec('git push -f https://github.com/sylvainpolletvillard/threejs-3d-materials gh-pages')
 
 cd("-")
