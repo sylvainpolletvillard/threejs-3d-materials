@@ -1,8 +1,9 @@
 {
-  "name": "threejs-3d-materials",
+  "name": "threejs-3d-materials-demo-website",
   "description": "Collection of materials for Three.JS with 3D seamless textures from 3dtextures.me",
   "version": "0.0.0",
   "type": "module",
+  "exports": "./dist/exports.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

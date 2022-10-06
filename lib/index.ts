@@ -1,9 +1,9 @@
 import { MeshStandardMaterial } from "three";
-import { Ground_Dirt_007 } from "./Ground_Dirt_007";
-import { Pebbles_025 } from "./Pebbles_025";
-import { Sand_002 } from "./Sand_002";
-import { SciFi_Wall_014 } from "./SciFi_Wall_014";
-import { Wood_027 } from "./Wood_027";
+import { Ground_Dirt_007 } from "./materials/Ground_Dirt_007";
+import { Pebbles_025 } from "./materials/Pebbles_025";
+import { Sand_002 } from "./materials/Sand_002";
+import { SciFi_Wall_014 } from "./materials/SciFi_Wall_014";
+import { Wood_027 } from "./materials/Wood_027";
 
 interface LazyLoaderProxyProxyConstructor {
     new <T, H extends object>(target: T, handler: ProxyHandler<H>): H

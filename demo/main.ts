@@ -1,6 +1,6 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, BoxGeometry, Mesh, PointLight, MeshBasicMaterial, SphereGeometry, MeshStandardMaterial, Color, Fog, HemisphereLight, PlaneGeometry } from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { MATERIALS } from "./materials";
+import { MATERIALS } from "threejs-3d-materials";
 
 import './style.css'
 

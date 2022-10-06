@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, TextureLoader, Texture } from "three";
+import { MeshStandardMaterial, TextureLoader, Texture, DoubleSide } from "three";
 
 export interface TexturePaths {
     colorMapFile: string;
@@ -16,7 +16,7 @@ export interface TextureMaps {
     metalnessMap: Texture | undefined
 }
 
-export const lazyLoader = (texturePaths: TexturePaths, constructor: (textureMaps: TextureMaps) => MeshStandardMaterial) => {
+export const lazyMaterialLoader: (paths: TexturePaths) => () => MeshStandardMaterial = (texturePaths: TexturePaths) => {
     return () => {
         const textureLoader = new TextureLoader();
         const colorMap = textureLoader.load( texturePaths.colorMapFile );
@@ -24,12 +24,13 @@ export const lazyLoader = (texturePaths: TexturePaths, constructor: (textureMaps
         const roughnessMap = textureLoader.load( texturePaths.roughnessMapFile );
         const aoMap = textureLoader.load( texturePaths.aoMapFile );
         const metalnessMap = texturePaths.metalnessMapFile ? textureLoader.load( texturePaths.metalnessMapFile ) : undefined;
-        return constructor({
-            colorMap,
-            normalMap,
-            roughnessMap,
-            aoMap,
-            metalnessMap
-        }) 
+        return new MeshStandardMaterial({
+            map: colorMap,
+            normalMap: normalMap,
+            roughnessMap: roughnessMap,
+            aoMap: aoMap,
+            metalnessMap: metalnessMap,
+            side: DoubleSide
+        })
     }
 }
