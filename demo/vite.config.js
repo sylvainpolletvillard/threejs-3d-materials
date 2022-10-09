@@ -4,7 +4,7 @@ export default {
   base: "/threejs-3d-materials/",
   resolve:{
     alias:{
-      'threejs-3d-materials' : resolve(__dirname, '../lib/dist/3d-materials.js')
+      'threejs-3d-materials' : resolve(__dirname, '../lib/dist/threejs-3d-materials.js')
     },
   },
   server: {

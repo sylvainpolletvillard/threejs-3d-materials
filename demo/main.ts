@@ -1,6 +1,6 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, BoxGeometry, Mesh, PointLight, MeshBasicMaterial, SphereGeometry, MeshStandardMaterial, Color, Fog, HemisphereLight, PlaneGeometry } from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, BoxGeometry, Mesh, PointLight, MeshBasicMaterial, SphereGeometry, MeshStandardMaterial, Color, Fog, HemisphereLight, PlaneGeometry, CylinderGeometry, BufferGeometry } from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { MATERIALS } from "threejs-3d-materials";
+import { T3DMaterials, T3DMaterial, T3DMaterialCategory } from "threejs-3d-materials";
 
 import './style.css'
 
@@ -31,8 +31,8 @@ pointLightSphere.add( pointLight );
 pointLightSphere.position.set(2,2,0)
 scene.add( pointLightSphere );
 
-let currentMaterial=0;
-const materialNames: string[] = Object.keys(MATERIALS)
+const materials: T3DMaterial[] = Object.values(T3DMaterials)
+const categories: T3DMaterialCategory[] = materials.map(m => m.category).sort()
 
 const floor = new Mesh( new PlaneGeometry( 100, 100 ), new MeshStandardMaterial( { color: 0x888888, depthWrite: false } ) );
 floor.position.set(0,-0.5,0)
@@ -40,10 +40,14 @@ floor.rotation.x = - Math.PI / 2;
 scene.add( floor );
 
 const geometry = new BoxGeometry( 1, 1, 1, 100, 100, 100 );
-const cube = new Mesh( geometry, new MeshStandardMaterial({ color: 0x888888 }) );
-scene.add( cube );
+const shape = new Mesh( geometry as BufferGeometry, new MeshStandardMaterial({ color: 0x888888 }) );
+scene.add( shape );
 
-loadMaterial(0);
+let currentMaterial, currentGeometry;
+buildMenuMaterials()
+buildMenuGeometries()
+loadMaterial(T3DMaterials.Wood_027)
+loadGeometry("cube")
 
 let t=0;
 (function animate() {
@@ -68,16 +72,68 @@ window.addEventListener('resize', function onResize(){
 })
 
 
-function loadMaterial(newMaterialIndex: number){
-  currentMaterial = newMaterialIndex
-  cube.material = MATERIALS[materialNames[currentMaterial]]
-  document.getElementById("hud")!.textContent = Object.keys(MATERIALS)[currentMaterial]
+function loadMaterial(material: T3DMaterial){
+  currentMaterial = material
+  shape.material = material
+  ;[...document.querySelectorAll("#menu-materials .selected")].forEach(el => el.classList.remove("selected"))
+  document.querySelector(`li[data-material="${material.name}"]`)?.classList.add("selected")
+  document.querySelector("#current-material")!.textContent = material.name
 }
 
-window.addEventListener('keydown', e => {
-  if(e.key === "ArrowDown" || e.key === "PageDown"){
-    loadMaterial((currentMaterial + 1) % materialNames.length);
-  } else if(e.key === "ArrowUp" || e.key === "PageUp"){
-    loadMaterial((currentMaterial - 1 + materialNames.length) % materialNames.length);
+type DemoGeometry = "cube" | "sphere" | "cylinder";
+function loadGeometry(geom: DemoGeometry){
+  currentGeometry = geom
+  const NB_SEGMENTS = 100
+  switch(geom){
+    case "cube": shape.geometry = new BoxGeometry( 1, 1, 1, NB_SEGMENTS, NB_SEGMENTS, NB_SEGMENTS ); break;
+    case "cylinder": shape.geometry = new CylinderGeometry( .5, .5, 1, NB_SEGMENTS, NB_SEGMENTS ); break;
+    case "sphere": shape.geometry = new SphereGeometry(.5, NB_SEGMENTS, NB_SEGMENTS); break;
   }
-})
+  ;[...document.querySelectorAll("#menu-geometries .selected")].forEach(el => el.classList.remove("selected"))
+  document.querySelector(`li[data-geometry="${geom}"]`)?.classList.add("selected")
+}
+
+function h(tag: string, children: (HTMLElement|string)[], attrs?: { [attr: string]: any }): HTMLElement {
+  const elm = document.createElement(tag)
+  for(let child of children){
+    if(child instanceof Element) elm.appendChild(child)
+    else elm.appendChild(document.createTextNode(child))
+  }
+  if(attrs){
+    for(let attr in attrs){
+      elm.setAttribute(attr, attrs[attr])
+    }
+  }
+  return elm
+}
+
+function buildMenuMaterials(){
+  const menu = document.getElementById("menu-materials")!
+  //menu.innerHTML = ""
+  menu.appendChild(h("details", [
+    h("summary", ["Materials"]),
+    ...categories.map(category => h("details", [
+      h("summary", [category]),
+      h("ul", materials.filter(m => m.category === category).map(material => {
+        const li = h("li", [material.name])        
+        li.setAttribute("data-material", material.name)
+        li.addEventListener("click", () => loadMaterial(material))
+        return li
+      }))
+    ], { open: true }))
+  ], { open: true }))
+}
+
+function buildMenuGeometries(){
+  const menu = document.getElementById("menu-geometries")!
+  const geometries: DemoGeometry[] = ["cube","sphere","cylinder"]
+  menu.appendChild(
+    h("ul", geometries.map(geom => {
+      const li = h("li",
+        [ h("img", [], { src: `img/${geom}.svg`, alt: geom }) ],
+        { "data-geometry": geom })
+      li.addEventListener("click", () => loadGeometry(geom))
+      return li
+    }))
+  )
+}

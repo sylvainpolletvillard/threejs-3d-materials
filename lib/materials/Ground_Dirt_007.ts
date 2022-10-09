@@ -5,6 +5,8 @@ import aoMapFile from "../assets/textures/Ground_Dirt_007/Ground_Dirt_007_ambien
 import { lazyMaterialLoader } from "./loader";
 
 export const Ground_Dirt_007 = lazyMaterialLoader({
+    name: "Ground_Dirt_007",
+    category: "Ground",
     colorMapFile,
     normalMapFile,
     roughnessMapFile,

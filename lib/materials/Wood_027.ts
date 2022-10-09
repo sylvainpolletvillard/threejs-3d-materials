@@ -5,6 +5,8 @@ import aoMapFile from "../assets/textures/Wood_027/Wood_027_ambientOcclusion.jpg
 import { lazyMaterialLoader } from "./loader";
 
 export const Wood_027 = lazyMaterialLoader({
+    name: "Wood_027",
+    category: "Wood",
     colorMapFile,
     normalMapFile,
     roughnessMapFile,

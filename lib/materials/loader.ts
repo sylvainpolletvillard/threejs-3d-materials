@@ -1,36 +1,19 @@
-import { MeshStandardMaterial, TextureLoader, Texture, DoubleSide } from "three";
+import { MeshStandardMaterial, TextureLoader,  DoubleSide, MeshStandardMaterialParameters } from "three";
+import { T3DMaterial, T3DMaterialConfig, TexturePaths } from "./types"
 
-export interface TexturePaths {
-    colorMapFile: string;
-    normalMapFile: string;
-    roughnessMapFile: string;
-    aoMapFile: string;
-    metalnessMapFile?: string;
-}
-
-export interface TextureMaps {
-    colorMap: Texture,
-    normalMap: Texture,
-    roughnessMap: Texture,
-    aoMap: Texture,
-    metalnessMap: Texture | undefined
-}
-
-export const lazyMaterialLoader: (paths: TexturePaths) => () => MeshStandardMaterial = (texturePaths: TexturePaths) => {
+export const lazyMaterialLoader: (config: T3DMaterialConfig & TexturePaths) => () => T3DMaterial = (config) =>{
     return () => {
         const textureLoader = new TextureLoader();
-        const colorMap = textureLoader.load( texturePaths.colorMapFile );
-        const normalMap = textureLoader.load( texturePaths.normalMapFile );
-        const roughnessMap = textureLoader.load( texturePaths.roughnessMapFile );
-        const aoMap = textureLoader.load( texturePaths.aoMapFile );
-        const metalnessMap = texturePaths.metalnessMapFile ? textureLoader.load( texturePaths.metalnessMapFile ) : undefined;
-        return new MeshStandardMaterial({
-            map: colorMap,
-            normalMap: normalMap,
-            roughnessMap: roughnessMap,
-            aoMap: aoMap,
-            metalnessMap: metalnessMap,
+        const materialConfig: MeshStandardMaterialParameters = {
+            map: textureLoader.load( config.colorMapFile ),
+            normalMap: textureLoader.load( config.normalMapFile ),
+            roughnessMap: textureLoader.load( config.roughnessMapFile ),
+            aoMap: textureLoader.load( config.aoMapFile ),
             side: DoubleSide
-        })
+        }
+        if(config.metalnessMapFile){
+            materialConfig.metalnessMap = textureLoader.load( config.metalnessMapFile )
+        }
+        return Object.assign(new MeshStandardMaterial(materialConfig), config) as T3DMaterial
     }
 }

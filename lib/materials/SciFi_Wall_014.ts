@@ -7,6 +7,8 @@ import metalnessMapFile from "../assets/textures/Sci-Fi_Wall_014/Sci-Fi_Wall_014
 import { lazyMaterialLoader } from "./loader";
 
 export const SciFi_Wall_014 = lazyMaterialLoader({
+    name: "SciFi_Wall_014",
+    category: "Urban",
     colorMapFile,
     normalMapFile,
     roughnessMapFile,

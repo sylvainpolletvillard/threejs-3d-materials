@@ -5,6 +5,8 @@ import aoMapFile from "../assets/textures/Pebbles_025/Pebbles_025_AmbientOcclusi
 import { lazyMaterialLoader } from "./loader";
 
 export const Pebbles_025 = lazyMaterialLoader({
+    name: "Pebbles_025",
+    category: "Rock",
     colorMapFile,
     normalMapFile,
     roughnessMapFile,
