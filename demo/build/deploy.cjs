@@ -24,6 +24,6 @@ if (exec('git commit -m "deploy"').code !== 0) {
 }
 
 // if you are deploying to https://<USERNAME>.github.io/<REPO>
-exec('git push -f https://github.com/sylvainpolletvillard/t3d-materials gh-pages')
+exec('git push -f https://github.com/sylvainpolletvillard/threejs-3d-materials gh-pages')
 
 cd("-")
